@@ -75,7 +75,7 @@ let countPrice = (data, type) => {
             { name: 'Mithril Ore', count: 290 * th.m, price: 290 * th.m * orePrice, unit: 'g', img: oreImg },
             { name: 'Elder Wood Log', count: 290 * th.w, price: 290 * th.w * woodPrice, unit: 'g', img: woodImg },
             { name: cheapestTrophy.name, count: 290 * 35, price: 290 * 35 * trophyPrice, unit: 'g', img: trophyImg },
-            { name: 'Map Token', count: 290, price: 290 * 15, unit: 'token', img: token }
+            { name: 'Map Token', count: 290, price: 290 * 20, unit: 'token', img: token }
         ]
     };
 

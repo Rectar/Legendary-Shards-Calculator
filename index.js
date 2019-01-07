@@ -110,7 +110,7 @@ let countPrice = (data, type) => {
             { name: 'Mithril Ore', count: 300 * ofh.m + 65 * mh.m, price: 300 * ofh.m * orePrice + 65 * mh.m * orePrice, unit: 'g', img: oreImg },
             { name: 'Elder Wood Log', count: 300 * ofh.w + 65 * mh.w, price: 300 * ofh.w * woodPrice + 65 * mh.w * woodPrice, unit: 'g', img: woodImg },
             { name: cheapestTrophy.name, count: 365 * 35, price: 365 * 35 * trophyPrice, unit: 'g', img: trophyImg },
-            { name: 'Map Token', count: 365, price: 300 * 10 + 65 * 20, unit: 'token', img: token },
+            { name: 'Map Token', count: 365, price: 300 * 10 + 65 * 15, unit: 'token', img: token },
             { name: 'Glob of Ectoplasm', count: 15, price: 15 * ectoPrice, unit: 'g', img: ectoImg },
             { name: 'Philosopher\'s Stone', count: 15, price: 1.5, unit: 'ss', img: stone },
             { name: 'Thermocatalytic Reagent', count: 15, price: 2244, unit: 'g', img: thermo },
@@ -127,10 +127,10 @@ let countPrice = (data, type) => {
     };
 
     let result = [option1, option2, option3];
-    formatView(result, cheapestTrophy);
+    formatView(result);
 }
 
-let formatView = (result, cheapestTrophy) => {
+let formatView = (result) => {
     let $detailView = $('#detailView');
     $detailView.empty();
 
@@ -154,15 +154,16 @@ let formatView = (result, cheapestTrophy) => {
                 sumMH += price;
                 p = g ? `${g}<img src='${gold}'>${s}<img src='${silver}'>${c}<img src='${copper}'>` : s ? `${s}<img src='${silver}'>${c}<img src='${copper}'>` : `${c}<img src='${copper}'>`;
             } else if (unit === 'token') {
-                p = `${price}<img src='${token}'>`;
+                p = `${price}<img src='${token}'>`;       
                 totalMatMH.push(p);
+                console.log(p);
             } else if (unit === 'ss') {
                 p = `${price}<img src='${ss}'>`;
                 totalMatMH.push(p);
             }
 
-            matListMH.push(`<li>${x.count} <img src='${x.img}'>${x.name} - ${p}</li>`);
-        });
+           matListMH.push(`<li>${x.count} <img src='${x.img}'>${x.name} - ${p}</li>`);
+        });  
         totalMatMH.push(`${Math.floor(sumMH / 10000)}<img src='${gold}'>${Math.floor((sumMH % 10000) / 100)}<img src='${silver}'>${sumMH % 100}<img src='${copper}'>`);
 
         data.twoHands.forEach((x, i) => {
@@ -187,172 +188,8 @@ let formatView = (result, cheapestTrophy) => {
         });
         totalMatTH.push(`${Math.floor(sumTH / 10000)}<img src='${gold}'>${Math.floor((sumTH % 10000) / 100)}<img src='${silver}'>${sumTH % 100}<img src='${copper}'>`);    
 
-        $detailView.append(`<div><h3>${data.title}</h3><p>${data.discription}</p><div class="mainHand"><ul>${matListMH.join('')}</ul></div><p class='total'>Total: ${totalMatMH.join(',')}</p><br><div class="twoHands"><ul>${matListMH.join('')}</ul></div><p class='total'>Total:${totalMatTH.join(',')}</p></div><br>`)
+        $detailView.append(`<div><h3>${data.title}</h3><p>${data.discription}</p><div class="mainHand"><ul>${matListMH.join('')}</ul></div><p class='total'>Total: ${totalMatMH.join(',')}</p><br><div class="twoHands"><ul>${matListTH.join('')}</ul></div><p class='total'>Total:${totalMatTH.join(',')}</p></div><br>`)
     });
-    /*
-    let $op1mh = $('#option1 .mainHand');
-    let $op1th = $('#option1 .twoHands');
-    let $ul1m = $op1mh.find('ul');
-    let $ul1t = $op1th.find('ul');
-    $ul1m.empty();
-    $ul1t.empty();
-    let sum1mh = 0;
-    let sum1th = 0;
-    let total1m = [];
-    let total1t = [];
-    op1.mainHand.forEach((x, i) => {
-        let p = '';
-        let unit = x.unit;
-        let price = x.price;
-        if (unit === 'g') {
-            let g = price > 10000 ? Math.floor(price / 10000) : 0;
-            let s = price > 100 ? Math.floor((price % 10000) / 100) : 0;
-            let c = price % 100;
-            sum1mh += price;
-            p = g ? `${g}<img src='${gold}'>${s}<img src='${silver}'>${c}<img src='${copper}'>` : s ? `${s}<img src='${silver}'>${c}<img src='${copper}'>` : `${c}<img src='${copper}'>`;
-        } else if (unit === 'token') {
-            p = `${price}<img src='${token}'>`;
-            total1m.push(p);
-        }
-
-        $ul1m.append(`<li>${x.count} <img src='${x.img}'>${x.name} - ${p}</li>`);
-    });
-    total1m.push(`${Math.floor(sum1mh / 10000)}<img src='${gold}'>${Math.floor((sum1mh % 10000) / 100)}<img src='${silver}'>${sum1mh % 100}<img src='${copper}'>`);
-    $op1mh.find('div.total').html(total1m.join(','))
-
-    op1.twoHands.forEach((x, i) => {
-        let p = '';
-        let unit = x.unit;
-        let price = x.price;
-        if (unit === 'g') {
-            let g = price > 10000 ? Math.floor(price / 10000) : 0;
-            let s = price > 100 ? Math.floor((price % 10000) / 100) : 0;
-            let c = price % 100;
-            sum1th += price;
-            p = g ? `${g}<img src='${gold}'>${s}<img src='${silver}'>${c}<img src='${copper}'>` : s ? `${s}<img src='${silver}'>${c}<img src='${copper}'>` : `${c}<img src='${copper}'>`;
-        } else if (unit === 'token') {
-            p = `${price}<img src='${token}'>`;
-            total1t.push(p);
-        }
-
-        $ul1t.append(`<li>${x.count} <img src='${x.img}'>${x.name} - ${p}</li>`);
-    });
-    total1t.push(`${Math.floor(sum1th / 10000)}<img src='${gold}'>${Math.floor((sum1th % 10000) / 100)}<img src='${silver}'>${sum1th % 100}<img src='${copper}'>`);
-    $op1th.find('div.total').html(total1t.join(','))
-
-
-    let $op2mh = $('#option2 .mainHand');
-    let $op2th = $('#option2 .twoHands');
-    let $ul2m = $op2mh.find('ul');
-    let $ul2t = $op2th.find('ul');
-    $ul2m.empty();
-    $ul2t.empty();
-    let sum2mh = 0;
-    let sum2th = 0;
-    let total2m = [];
-    let total2t = [];
-    op2.mainHand.forEach((x, i) => {
-        let p = '';
-        let unit = x.unit;
-        let price = x.price;
-        if (unit === 'g') {
-            let g = price > 10000 ? Math.floor(price / 10000) : 0;
-            let s = price > 100 ? Math.floor((price % 10000) / 100) : 0;
-            let c = price % 100;
-            sum2mh += price;
-            p = g ? `${g}<img src='${gold}'>${s}<img src='${silver}'>${c}<img src='${copper}'>` : s ? `${s}<img src='${silver}'>${c}<img src='${copper}'>` : `${c}<img src='${copper}'>`;
-        } else if (unit === 'token') {
-            p = `${price}<img src='${token}'>`;
-            total2m.push(p);
-        } else if (unit === 'ss') {
-            p = `${price}<img src='${ss}'>`;
-            total2m.push(p);
-        }
-
-        $ul2m.append(`<li>${x.count} <img src='${x.img}'>${x.name} - ${p}</li>`);
-    });
-    total2m.push(`${Math.floor(sum2mh / 10000)}<img src='${gold}'>${Math.floor((sum2mh % 10000) / 100)}<img src='${silver}'>${sum2mh % 100}<img src='${copper}'>`);
-    $op2mh.find('div.total').html(total2m.join(','))
-
-    op2.twoHands.forEach((x, i) => {
-        let p = '';
-        let unit = x.unit;
-        let price = x.price;
-        if (unit === 'g') {
-            let g = price > 10000 ? Math.floor(price / 10000) : 0;
-            let s = price > 100 ? Math.floor((price % 10000) / 100) : 0;
-            let c = price % 100;
-            sum2th += price;
-            p = g ? `${g}<img src='${gold}'>${s}<img src='${silver}'>${c}<img src='${copper}'>` : s ? `${s}<img src='${silver}'>${c}<img src='${copper}'>` : `${c}<img src='${copper}'>`;
-        } else if (unit === 'token') {
-            p = `${price}<img src='${token}'>`;
-            total2t.push(p);
-        } else if (unit === 'ss') {
-            p = `${price}<img src='${ss}'>`;
-            total2t.push(p);
-        }
-
-        $ul2t.append(`<li>${x.count} <img src='${x.img}'>${x.name} - ${p}</li>`);
-    });
-    total2t.push(`${Math.floor(sum2th / 10000)}<img src='${gold}'>${Math.floor((sum2th % 10000) / 100)}<img src='${silver}'>${sum2th % 100}<img src='${copper}'>`);
-    $op2th.find('div.total').html(total2t.join(','))
-
-    let $op3mh = $('#option3 .mainHand');
-    let $op3th = $('#option3 .twoHands');
-    let $ul3m = $op3mh.find('ul');
-    let $ul3t = $op3th.find('ul');
-    $ul3m.empty();
-    $ul3t.empty();
-    let sum3mh = 0;
-    let sum3th = 0;
-    let total3m = [];
-    let total3t = [];
-    op3.mainHand.forEach((x, i) => {
-        let p = '';
-        let unit = x.unit;
-        let price = x.price;
-        if (unit === 'g') {
-            let g = price > 10000 ? Math.floor(price / 10000) : 0;
-            let s = price > 100 ? Math.floor((price % 10000) / 100) : 0;
-            let c = price % 100;
-            sum3mh += price;
-            p = g ? `${g}<img src='${gold}'>${s}<img src='${silver}'>${c}<img src='${copper}'>` : s ? `${s}<img src='${silver}'>${c}<img src='${copper}'>` : `${c}<img src='${copper}'>`;
-        } else if (unit === 'token') {
-            p = `${price}<img src='${token}'>`;
-            total3m.push(p);
-        } else if (unit === 'ss') {
-            p = `${price}<img src='${ss}'>`;
-            total3m.push(p);
-        }
-
-        $ul3m.append(`<li>${x.count} <img src='${x.img}'>${x.name} - ${p}</li>`);
-    });
-    total3m.push(`${Math.floor(sum3mh / 10000)}<img src='${gold}'>${Math.floor((sum3mh % 10000) / 100)}<img src='${silver}'>${sum3mh % 100}<img src='${copper}'>`);
-    $op3mh.find('div.total').html(total3m.join(','))
-
-    op3.twoHands.forEach((x, i) => {
-        let p = '';
-        let unit = x.unit;
-        let price = x.price;
-        if (unit === 'g') {
-            let g = price > 10000 ? Math.floor(price / 10000) : 0;
-            let s = price > 100 ? Math.floor((price % 10000) / 100) : 0;
-            let c = price % 100;
-            sum3th += price;
-            p = g ? `${g}<img src='${gold}'>${s}<img src='${silver}'>${c}<img src='${copper}'>` : s ? `${s}<img src='${silver}'>${c}<img src='${copper}'>` : `${c}<img src='${copper}'>`;
-        } else if (unit === 'token') {
-            p = `${price}<img src='${token}'>`;
-            total3t.push(p);
-        } else if (unit === 'ss') {
-            p = `${price}<img src='${ss}'>`;
-            total3t.push(p);
-        }
-
-        $ul3t.append(`<li>${x.count} <img src='${x.img}'>${x.name} - ${p}</li>`);
-    });
-    total3t.push(`${Math.floor(sum3th / 10000)}<img src='${gold}'>${Math.floor((sum3th % 10000) / 100)}<img src='${silver}'>${sum3th % 100}<img src='${copper}'>`);
-    $op3th.find('div.total').html(total3t.join(','))
-*/
 }
 
 let offHandShard = [

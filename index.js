@@ -212,7 +212,8 @@ let mainHandShard = [
 
 let twoHandsShard = [
     { name: 'Shard o\' War', url: 'https://wiki.guildwars2.com/wiki/Shard_o%27_War', img: 'https://wiki.guildwars2.com/images/thumb/2/23/Shard_o%27_War.png/20px-Shard_o%27_War.png' },
-    { name: 'Shard of Arah', url: 'https://wiki.guildwars2.com/wiki/Shard_of_Arah', img: 'https://wiki.guildwars2.com/images/thumb/c/ca/Shard_of_Arah.png/20px-Shard_of_Arah.png' }
+    { name: 'Shard of Arah', url: 'https://wiki.guildwars2.com/wiki/Shard_of_Arah', img: 'https://wiki.guildwars2.com/images/thumb/c/ca/Shard_of_Arah.png/20px-Shard_of_Arah.png' },
+    { name: 'Shard of Spero', url: 'https://wiki.guildwars2.com/wiki/Shard_of_Spero', img: 'https://wiki.guildwars2.com/images/thumb/0/02/Shard_of_Spero.png/20px-Shard_of_Spero.png' },
 ];
 
 let tp = [

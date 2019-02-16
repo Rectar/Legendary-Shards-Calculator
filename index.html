@@ -4,8 +4,6 @@
     <title>Legendary Shard Calculator</title>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
     <script src="./index.js"></script>
-    <!-- minify -->
-    <link href="https://unpkg.com/nes.css@1.0.0/css/nes.min.css" rel="stylesheet" />
     <!-- latest -->
     <link href="https://unpkg.com/nes.css/css/nes.min.css" rel="stylesheet" />
     <!-- core style only -->
@@ -13,19 +11,47 @@
     <!-- Font -->
     <link href="https://fonts.googleapis.com/css?family=Press+Start+2P" rel="stylesheet">
     <style>
-        html, body, pre, code, kbd, samp {
-          font-family: 'Press Start 2P', cursive;
+        html,
+        body,
+        pre,
+        code,
+        kbd,
+        samp {
+            font-family: 'Press Start 2P', cursive;
         }
-</style>
+
+        .red {
+            color: red;
+        }
+    </style>
 </head>
 
 <body>
     <section class="nes-container with-title">
-        <h2 class="title">What is Legendary Shards Calculator?</h2>
+        <h2 class="title">What is Legendary Shard Calculator?</h2>
         <div class="containers">
-            The diffence between 3 crafting way for generation 2 legendary weapons' shards.<br>
-            You will need to craft <a href="https://wiki.guildwars2.com/wiki/Enormous_Chest_of_Legendary_Shards">Enormous
-                Chest of Legendary Shards</a> for some optional ways.
+            The diffent price between 3 crafting ways for generation 2 legendary weapons' shards.<br>
+            You will need to craft <a
+                href="https://wiki.guildwars2.com/wiki/Enormous_Chest_of_Legendary_Shards">Enormous
+                Chest of Legendary Shards</a> for some optional ways.<br>
+            <span class="red">Astralaria, Chuka and Champawat, HOPE, Nevermore are not available.</span>
+        </div>
+    </section>
+
+    <section class="nes-container with-title">
+        <h2 class="title">What weapons type are you crafting?</h2>
+        <div class="containers">
+            <div>
+                <label>
+                    <input type="radio" class="nes-radio" onclick="weaponChange(this);" name="twohands" value="2" />
+                    <span>Twohands Weapons</span>
+                </label>
+                <br>
+                <label>
+                    <input type="radio" class="nes-radio" onclick="weaponChange(this);" name="mainhand" value="1" />
+                    <span>Mainhands Weapons</span>
+                </label>
+            </div>
         </div>
     </section>
 
@@ -34,20 +60,20 @@
         <div class="containers">
             <div>
                 <label>
-                    <input type="radio" class="nes-radio priceRadio" onclick="radioChange(this);" name="sell" value="BUY" />
-                    <span>I'm rich, Sell Price of course.</span>
+                    <input type="radio" class="nes-radio" onclick="priceChange(this);" name="sell" value="BUY" />
+                    <span>I'm rich, <span class="red">Sell Price</span> of course.</span>
                 </label>
                 <br>
                 <label>
-                    <input type="radio" class="nes-radio priceRadio" onclick="radioChange(this);" name="buy" value="ORDER" />
-                    <span>I'm poor, Buy Price is fine.</span>
+                    <input type="radio" class="nes-radio" onclick="priceChange(this);" name="buy" value="ORDER" />
+                    <span>I'm poor, <span class="red">Buy Price</span> is fine.</span>
                 </label>
             </div>
         </div>
     </section>
 
-    <section class="nes-container with-title">
-        <h2 class="title">Current Materials' Price</h2>
+    <section class="nes-container with-title" id="sectionMatPrice">
+        <h2 class="title">Current materials' price</h2>
         <div class="lists" id="priceList">
             <ul class="nes-list is-disc">
             </ul>
@@ -55,7 +81,7 @@
     </section>
 
     <section class="nes-container with-title">
-        <h2 class="title">Result</h2>
+        <h2 class="title">Result - <span id="resultTitle">potato</span></h2>
         <div id="detailView" class="containers">
         </div>
     </section>

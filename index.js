@@ -1,25 +1,36 @@
-$(document).ready(() => {
-    $('#detailView').hide();
-});
+$(document).ready(() => { });
 
-let radioChange = (e) => {
-    let priceType = e.value === 'BUY' ? 'buy' : 'order';
-    $('#detailView').show();
-    getPrice(priceType)
+let priceType = '';
+let weaponType = '';
+let mergedList = [];
+
+let weaponChange = (e) => {
+    weaponType = e.value === '1' ? 'MainHand Weapon' : 'TwoHands Weapon';
+    $('#resultTitle').text(weaponType);
+    if (weaponType !== '' && priceType !== '') {
+        countWeaponPrice(mergedList, priceType, weaponType);
+    }
+}
+
+let priceChange = (e) => {
+    priceType = e.value === 'BUY' ? 'buy' : 'order';
+    getPrice(priceType);
 }
 
 let getPrice = (type) => {
     $.get(postURl, (data) => {
-        let mergedList = tp.map((x) => {
+        mergedList = tp.map((x) => {
             let p = data.filter(y => y.id === x.id)[0];
             return { name: x.name, img: x.img, buy: p.sells.unit_price, order: p.buys.unit_price, group: x.group };
         });
-        listPrice(mergedList, type);
-        countPrice(mergedList, type);
+        listMatPrice(mergedList, type);
+        if (weaponType !== '' && priceType !== '') {
+            countWeaponPrice(mergedList, priceType, weaponType);
+        }
     });
 }
 
-let listPrice = (data, type) => {
+let listMatPrice = (data, type) => {
     let $ul = $('#priceList').find('ul');
     $ul.empty();
     data.forEach((x, i) => {
@@ -40,82 +51,37 @@ let listPrice = (data, type) => {
     });
 }
 
-let countPrice = (data, type) => {
+let countWeaponPrice = (data, price, weapon) => {
     // options: 1:290 2:4boxes 3:3boxes+65
     let ofh = { m: 70, w: 60 }; // offhand
     let mh = { m: 90, w: 90 }; // mainhand
     let th = { m: 110, w: 120 }; // twohands
     let cheapestTrophy = data.filter(x => x.group === 'trophy')
-        .reduce((res, obj) => { return (obj[type] < res[type]) ? obj : res });
-
+        .reduce((res, obj) => { return (obj[price] < res[price]) ? obj : res });
     let newPriceData = data.filter(x => x.group !== 'trophy').concat(cheapestTrophy);
-
     let ore = newPriceData.filter(x => x.name === 'Mithril Ore')[0];
     let wood = newPriceData.filter(x => x.name === 'Elder Wood Log')[0];
     let ecto = newPriceData.filter(x => x.name === 'Glob of Ectoplasm')[0];
-    let orePrice = ore[type];
-    let woodPrice = wood[type];
-    let ectoPrice = ecto[type];
-    let trophyPrice = cheapestTrophy[type];
+    let orePrice = ore[price];
+    let woodPrice = wood[price];
+    let ectoPrice = ecto[price];
+    let trophyPrice = cheapestTrophy[price];
     let oreImg = ore.img;
     let woodImg = wood.img;
     let ectoImg = ecto.img;
     let trophyImg = cheapestTrophy.img;
 
-    let option1 = {
-        title: 'Option1',
-        discription: 'Craft 290 mainhand/twohands shards. You have to buy 290 mainhand/twohands tributes.',
-        mainHand: [
-            { name: 'Mithril Ore', count: 290 * mh.m, price: 290 * mh.m * orePrice, unit: 'g', img: oreImg },
-            { name: 'Elder Wood Log', count: 290 * mh.w, price: 290 * mh.w * woodPrice, unit: 'g', img: woodImg },
-            { name: cheapestTrophy.name, count: 290 * 35, price: 290 * 35 * trophyPrice, unit: 'g', img: trophyImg },
-            { name: 'Map Token', count: 290, price: 290 * 15, unit: 'token', img: token }
-        ],
-        twoHands: [
+    let op1 = [];
+    let op3 = [];
+
+    if (weapon === 'TwoHands Weapon') {
+        op1 = [
             { name: 'Mithril Ore', count: 290 * th.m, price: 290 * th.m * orePrice, unit: 'g', img: oreImg },
             { name: 'Elder Wood Log', count: 290 * th.w, price: 290 * th.w * woodPrice, unit: 'g', img: woodImg },
             { name: cheapestTrophy.name, count: 290 * 35, price: 290 * 35 * trophyPrice, unit: 'g', img: trophyImg },
             { name: 'Map Token', count: 290, price: 290 * 20, unit: 'token', img: token }
-        ]
-    };
-
-
-    let option2 = {
-        title: 'Option2',
-        discription: 'Craft 4 Enormous Chest of Legendary Shards. You have to buy 400 offhand tributes and will get 10 extra shards for no use.',
-        mainHand: [
-            { name: 'Mithril Ore', count: 400 * ofh.m, price: 400 * ofh.m * orePrice, unit: 'g', img: oreImg },
-            { name: 'Elder Wood Log', count: 400 * ofh.w, price: 400 * ofh.w * woodPrice, unit: 'g', img: woodImg },
-            { name: cheapestTrophy.name, count: 400 * 35, price: 400 * 35 * trophyPrice, unit: 'g', img: trophyImg },
-            { name: 'Map Token', count: 400, price: 400 * 10, unit: 'token', img: token },
-            { name: 'Glob of Ectoplasm', count: 20, price: 20 * ectoPrice, unit: 'g', img: ectoImg },
-            { name: 'Philosopher\'s Stone', count: 20, price: 2, unit: 'ss', img: stone },
-            { name: 'Thermocatalytic Reagent', count: 20, price: 2992, unit: 'g', img: thermo },
-        ],
-        twoHands: [
-            { name: 'Mithril Ore', count: 400 * ofh.m, price: 400 * ofh.m * orePrice, unit: 'g', img: oreImg },
-            { name: 'Elder Wood Log', count: 400 * ofh.w, price: 400 * ofh.w * woodPrice, unit: 'g', img: woodImg },
-            { name: cheapestTrophy.name, count: 400 * 35, price: 400 * 35 * trophyPrice, unit: 'g', img: trophyImg },
-            { name: 'Map Token', count: 400, price: 400 * 10, unit: 'token', img: token },
-            { name: 'Glob of Ectoplasm', count: 20, price: 20 * ectoPrice, unit: 'g', img: ectoImg },
-            { name: 'Philosopher\'s Stone', count: 20, price: 2, unit: 'ss', img: stone },
-            { name: 'Thermocatalytic Reagent', count: 20, price: 2992, unit: 'g', img: thermo },
-        ]
-    };
-
-    let option3 = {
-        title: 'Option3',
-        discription: 'Craft 3 Enormous Chest of Legendary Shards and 65 shards.Craft 3 Enormous Chest of Legendary Shards and 65 shards. You have to buy 300 offhand tributes and 65 mainhand/twohands tributes.',
-        mainHand: [
-            { name: 'Mithril Ore', count: 300 * ofh.m + 65 * mh.m, price: 300 * ofh.m * orePrice + 65 * mh.m * orePrice, unit: 'g', img: oreImg },
-            { name: 'Elder Wood Log', count: 300 * ofh.w + 65 * mh.w, price: 300 * ofh.w * woodPrice + 65 * mh.w * woodPrice, unit: 'g', img: woodImg },
-            { name: cheapestTrophy.name, count: 365 * 35, price: 365 * 35 * trophyPrice, unit: 'g', img: trophyImg },
-            { name: 'Map Token', count: 365, price: 300 * 10 + 65 * 15, unit: 'token', img: token },
-            { name: 'Glob of Ectoplasm', count: 15, price: 15 * ectoPrice, unit: 'g', img: ectoImg },
-            { name: 'Philosopher\'s Stone', count: 15, price: 1.5, unit: 'ss', img: stone },
-            { name: 'Thermocatalytic Reagent', count: 15, price: 2244, unit: 'g', img: thermo },
-        ],
-        twoHands: [
+        ];
+        op3 = [
             { name: 'Mithril Ore', count: 300 * ofh.m + 65 * th.m, price: 300 * ofh.m * orePrice + 65 * th.m * orePrice, unit: 'g', img: oreImg },
             { name: 'Elder Wood Log', count: 300 * ofh.w + 65 * th.w, price: 300 * ofh.w * woodPrice + 65 * th.w * woodPrice, unit: 'g', img: woodImg },
             { name: cheapestTrophy.name, count: 365 * 35, price: 365 * 35 * trophyPrice, unit: 'g', img: trophyImg },
@@ -123,73 +89,94 @@ let countPrice = (data, type) => {
             { name: 'Glob of Ectoplasm', count: 15, price: 15 * ectoPrice, unit: 'g', img: ectoImg },
             { name: 'Philosopher\'s Stone', count: 15, price: 1.5, unit: 'ss', img: stone },
             { name: 'Thermocatalytic Reagent', count: 15, price: 2244, unit: 'g', img: thermo },
-        ]
+        ];
+    } else {
+        op1 = [
+            { name: 'Mithril Ore', count: 290 * mh.m, price: 290 * mh.m * orePrice, unit: 'g', img: oreImg },
+            { name: 'Elder Wood Log', count: 290 * mh.w, price: 290 * mh.w * woodPrice, unit: 'g', img: woodImg },
+            { name: cheapestTrophy.name, count: 290 * 35, price: 290 * 35 * trophyPrice, unit: 'g', img: trophyImg },
+            { name: 'Map Token', count: 290, price: 290 * 15, unit: 'token', img: token }
+        ];
+
+        op3 = [
+            { name: 'Mithril Ore', count: 300 * ofh.m + 65 * mh.m, price: 300 * ofh.m * orePrice + 65 * mh.m * orePrice, unit: 'g', img: oreImg },
+            { name: 'Elder Wood Log', count: 300 * ofh.w + 65 * mh.w, price: 300 * ofh.w * woodPrice + 65 * mh.w * woodPrice, unit: 'g', img: woodImg },
+            { name: cheapestTrophy.name, count: 365 * 35, price: 365 * 35 * trophyPrice, unit: 'g', img: trophyImg },
+            { name: 'Map Token', count: 365, price: 300 * 10 + 65 * 15, unit: 'token', img: token },
+            { name: 'Glob of Ectoplasm', count: 15, price: 15 * ectoPrice, unit: 'g', img: ectoImg },
+            { name: 'Philosopher\'s Stone', count: 15, price: 1.5, unit: 'ss', img: stone },
+            { name: 'Thermocatalytic Reagent', count: 15, price: 2244, unit: 'g', img: thermo },
+        ];
+    }
+
+    // all the same 
+    let op2 = [
+        { name: 'Mithril Ore', count: 400 * ofh.m, price: 400 * ofh.m * orePrice, unit: 'g', img: oreImg },
+        { name: 'Elder Wood Log', count: 400 * ofh.w, price: 400 * ofh.w * woodPrice, unit: 'g', img: woodImg },
+        { name: cheapestTrophy.name, count: 400 * 35, price: 400 * 35 * trophyPrice, unit: 'g', img: trophyImg },
+        { name: 'Map Token', count: 400, price: 400 * 10, unit: 'token', img: token },
+        { name: 'Glob of Ectoplasm', count: 20, price: 20 * ectoPrice, unit: 'g', img: ectoImg },
+        { name: 'Philosopher\'s Stone', count: 20, price: 2, unit: 'ss', img: stone },
+        { name: 'Thermocatalytic Reagent', count: 20, price: 2992, unit: 'g', img: thermo },
+    ];
+
+    let option1 = {
+        title: 'Option1',
+        discription: `Craft 290 ${weaponType} shards. You have to buy 290 ${weaponType} tributes.`,
+        result: op1
+    };
+
+    let option2 = {
+        title: 'Option2',
+        discription: 'Craft 4 Enormous Chest of Legendary Shards. You have to buy 400 Offhand Weapon tributes and will get 10 extra shards for no use.',
+        result: op2
+    };
+
+    let option3 = {
+        title: 'Option3',
+        discription: `Craft 3 Enormous Chest of Legendary Shards and 65 shards. You have to buy 300 Offhand Weapon tributes and 65 ${weaponType} tributes.`,
+        result: op3
     };
 
     let result = [option1, option2, option3];
-    formatView(result);
+    showResult(result);
 }
 
-let formatView = (result) => {
+let showResult = (result) => {
     let $detailView = $('#detailView');
     $detailView.empty();
 
-
     result.forEach((data, i) => {
-     
-        let sumMH = 0;
-        let sumTH = 0;
-        let totalMatMH = [];
-        let totalMatTH = [];
-        let matListMH = [];
-        let matListTH = [];
-        data.mainHand.forEach((x, i) => {
+        let sum = 0;
+        let totalMat = [];
+        let matList = [];
+
+        data.result.forEach((x, j) => {
             let p = '';
             let unit = x.unit;
             let price = x.price;
+
             if (unit === 'g') {
                 let g = price > 10000 ? Math.floor(price / 10000) : 0;
                 let s = price > 100 ? Math.floor((price % 10000) / 100) : 0;
                 let c = price % 100;
-                sumMH += price;
-                p = g ? `${g}<img src='${gold}'>${s}<img src='${silver}'>${c}<img src='${copper}'>` : s ? `${s}<img src='${silver}'>${c}<img src='${copper}'>` : `${c}<img src='${copper}'>`;
-            } else if (unit === 'token') {
-                p = `${price}<img src='${token}'>`;       
-                totalMatMH.push(p);
-                console.log(p);
-            } else if (unit === 'ss') {
-                p = `${price}<img src='${ss}'>`;
-                totalMatMH.push(p);
-            }
-
-           matListMH.push(`<li>${x.count} <img src='${x.img}'>${x.name} - ${p}</li>`);
-        });  
-        totalMatMH.push(`${Math.floor(sumMH / 10000)}<img src='${gold}'>${Math.floor((sumMH % 10000) / 100)}<img src='${silver}'>${sumMH % 100}<img src='${copper}'>`);
-
-        data.twoHands.forEach((x, i) => {
-            let p = '';
-            let unit = x.unit;
-            let price = x.price;
-            if (unit === 'g') {
-                let g = price > 10000 ? Math.floor(price / 10000) : 0;
-                let s = price > 100 ? Math.floor((price % 10000) / 100) : 0;
-                let c = price % 100;
-                sumTH += price;
+                sum += price;
                 p = g ? `${g}<img src='${gold}'>${s}<img src='${silver}'>${c}<img src='${copper}'>` : s ? `${s}<img src='${silver}'>${c}<img src='${copper}'>` : `${c}<img src='${copper}'>`;
             } else if (unit === 'token') {
                 p = `${price}<img src='${token}'>`;
-                totalMatTH.push(p);
+                totalMat.push(p);
             } else if (unit === 'ss') {
                 p = `${price}<img src='${ss}'>`;
-                totalMatTH.push(p);
+                totalMat.push(p);
             }
 
-            matListTH.push(`<li>${x.count} <img src='${x.img}'>${x.name} - ${p}</li>`);
+            matList.push(`<li>${x.count} <img src='${x.img}'>${x.name} - ${p}</li>`);
         });
-        totalMatTH.push(`${Math.floor(sumTH / 10000)}<img src='${gold}'>${Math.floor((sumTH % 10000) / 100)}<img src='${silver}'>${sumTH % 100}<img src='${copper}'>`);    
+        totalMat.push(`${Math.floor(sum / 10000)}<img src='${gold}'>${Math.floor((sum % 10000) / 100)}<img src='${silver}'>${sum % 100}<img src='${copper}'>`); // calculate money
 
-        $detailView.append(`<div><h3>${data.title}</h3><p>${data.discription}</p><div class="mainHand"><ul>${matListMH.join('')}</ul></div><p class='total'>Total: ${totalMatMH.join(',')}</p><br><div class="twoHands"><ul>${matListTH.join('')}</ul></div><p class='total'>Total:${totalMatTH.join(',')}</p></div><br>`)
+        $detailView.append(`<div><h3>${data.title}</h3><p>${data.discription}</p><div class="mainHand"><ul>${matList.join('')}</ul></div><p class='total'>Total: ${totalMat.join(',')}</p></div><br>`)
     });
+
 }
 
 let offHandShard = [

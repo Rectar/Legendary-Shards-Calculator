@@ -181,6 +181,7 @@ let showResult = (result) => {
                 p = g ? `${g}<img src='${gold}'>${s}<img src='${silver}'>${c}<img src='${copper}'>` : s ? `${s}<img src='${silver}'>${c}<img src='${copper}'>` : `${c}<img src='${copper}'>`;
             } else if (unit === 'token') {
                 sumToken += price;
+                p = `${price}<img src='${imgToken}'>`;
             } else if (unit === 'ss') {
                 p = `${price}<img src='${ss}'>`;
                 totalMat.push(p);

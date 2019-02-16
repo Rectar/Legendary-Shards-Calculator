@@ -93,7 +93,7 @@ let countWeaponPrice = (data, price, weapon) => {
             { name: 'Mithril Ore', count: 290 * th.m, price: 290 * th.m * orePrice, unit: 'g', img: oreImg },
             { name: 'Elder Wood Log', count: 290 * th.w, price: 290 * th.w * woodPrice, unit: 'g', img: woodImg },
             { name: cheapestTrophy.name, count: 290 * 35, price: 290 * 35 * trophyPrice, unit: 'g', img: trophyImg },
-            { name: 'Tribute', count: 290, price: 290 * 20, unit: 'token', img: imgTHTribute }
+            { name: 'Twohand Weapon Tribute', count: 290, price: 290 * 20, unit: 'token', img: imgTHTribute }
         ];
         op3 = [
             { name: 'Mithril Ore', count: 300 * ofh.m + 65 * th.m, price: 300 * ofh.m * orePrice + 65 * th.m * orePrice, unit: 'g', img: oreImg },
@@ -110,7 +110,7 @@ let countWeaponPrice = (data, price, weapon) => {
             { name: 'Mithril Ore', count: 290 * mh.m, price: 290 * mh.m * orePrice, unit: 'g', img: oreImg },
             { name: 'Elder Wood Log', count: 290 * mh.w, price: 290 * mh.w * woodPrice, unit: 'g', img: woodImg },
             { name: cheapestTrophy.name, count: 290 * 35, price: 290 * 35 * trophyPrice, unit: 'g', img: trophyImg },
-            { name: 'Tribute', count: 290, price: 290 * 15, unit: 'token', img: imgMHTribute }
+            { name: 'Mainhand Weapon Tribute', count: 290, price: 290 * 15, unit: 'token', img: imgMHTribute }
         ];
 
         op3 = [

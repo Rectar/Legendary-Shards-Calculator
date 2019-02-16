@@ -1,8 +1,22 @@
-$(document).ready(() => { });
-
 let priceType = '';
 let weaponType = '';
 let mergedList = [];
+let imgOHTribute = '';
+let imgTHTribute = '';
+let imgMHTribute = '';
+let imgToken = '';
+
+$(document).ready(() => {
+    imgOHTribute = offHandShard[getRandom(0, offHandShard.length - 1)].img;
+    imgTHTribute = twoHandsShard[getRandom(0, twoHandsShard.length - 1)].img;
+    imgMHTribute = mainHandShard[getRandom(0, mainHandShard.length - 1)].img;
+    imgToken = mapCurrency[getRandom(0, mapCurrency.length - 1)].img;
+});
+
+let getRandom = (min, max) => {
+    return Math.floor(Math.random() * (max - min + 1)) + min;
+};
+
 
 let weaponChange = (e) => {
     weaponType = e.value === '1' ? 'MainHand Weapon' : 'TwoHands Weapon';
@@ -18,7 +32,7 @@ let priceChange = (e) => {
 }
 
 let getPrice = (type) => {
-    $.get(postURl, (data) => {
+    $.get(apiURL, (data) => {
         mergedList = tp.map((x) => {
             let p = data.filter(y => y.id === x.id)[0];
             return { name: x.name, img: x.img, buy: p.sells.unit_price, order: p.buys.unit_price, group: x.group };
@@ -79,13 +93,14 @@ let countWeaponPrice = (data, price, weapon) => {
             { name: 'Mithril Ore', count: 290 * th.m, price: 290 * th.m * orePrice, unit: 'g', img: oreImg },
             { name: 'Elder Wood Log', count: 290 * th.w, price: 290 * th.w * woodPrice, unit: 'g', img: woodImg },
             { name: cheapestTrophy.name, count: 290 * 35, price: 290 * 35 * trophyPrice, unit: 'g', img: trophyImg },
-            { name: 'Map Token', count: 290, price: 290 * 20, unit: 'token', img: token }
+            { name: 'Tribute', count: 290, price: 290 * 20, unit: 'token', img: imgTHTribute }
         ];
         op3 = [
             { name: 'Mithril Ore', count: 300 * ofh.m + 65 * th.m, price: 300 * ofh.m * orePrice + 65 * th.m * orePrice, unit: 'g', img: oreImg },
             { name: 'Elder Wood Log', count: 300 * ofh.w + 65 * th.w, price: 300 * ofh.w * woodPrice + 65 * th.w * woodPrice, unit: 'g', img: woodImg },
             { name: cheapestTrophy.name, count: 365 * 35, price: 365 * 35 * trophyPrice, unit: 'g', img: trophyImg },
-            { name: 'Map Token', count: 365, price: 300 * 10 + 65 * 20, unit: 'token', img: token },
+            { name: 'Twohand Weapon Tribute', count: 300, price: 300 * 10, unit: 'token', img: imgTHTribute },
+            { name: 'OffHand Weapon Tribute', count: 65, price: 65 * 15, unit: 'token', img: imgOHTribute },
             { name: 'Glob of Ectoplasm', count: 15, price: 15 * ectoPrice, unit: 'g', img: ectoImg },
             { name: 'Philosopher\'s Stone', count: 15, price: 1.5, unit: 'ss', img: stone },
             { name: 'Thermocatalytic Reagent', count: 15, price: 2244, unit: 'g', img: thermo },
@@ -95,14 +110,15 @@ let countWeaponPrice = (data, price, weapon) => {
             { name: 'Mithril Ore', count: 290 * mh.m, price: 290 * mh.m * orePrice, unit: 'g', img: oreImg },
             { name: 'Elder Wood Log', count: 290 * mh.w, price: 290 * mh.w * woodPrice, unit: 'g', img: woodImg },
             { name: cheapestTrophy.name, count: 290 * 35, price: 290 * 35 * trophyPrice, unit: 'g', img: trophyImg },
-            { name: 'Map Token', count: 290, price: 290 * 15, unit: 'token', img: token }
+            { name: 'Tribute', count: 290, price: 290 * 15, unit: 'token', img: imgMHTribute }
         ];
 
         op3 = [
             { name: 'Mithril Ore', count: 300 * ofh.m + 65 * mh.m, price: 300 * ofh.m * orePrice + 65 * mh.m * orePrice, unit: 'g', img: oreImg },
             { name: 'Elder Wood Log', count: 300 * ofh.w + 65 * mh.w, price: 300 * ofh.w * woodPrice + 65 * mh.w * woodPrice, unit: 'g', img: woodImg },
             { name: cheapestTrophy.name, count: 365 * 35, price: 365 * 35 * trophyPrice, unit: 'g', img: trophyImg },
-            { name: 'Map Token', count: 365, price: 300 * 10 + 65 * 15, unit: 'token', img: token },
+            { name: 'Mainhand Weapon Tribute', count: 300, price: 300 * 10, unit: 'token', img: imgMHTribute },
+            { name: 'OffHand Weapon Tribute', count: 65, price: 65 * 15, unit: 'token', img: imgOHTribute },
             { name: 'Glob of Ectoplasm', count: 15, price: 15 * ectoPrice, unit: 'g', img: ectoImg },
             { name: 'Philosopher\'s Stone', count: 15, price: 1.5, unit: 'ss', img: stone },
             { name: 'Thermocatalytic Reagent', count: 15, price: 2244, unit: 'g', img: thermo },
@@ -114,7 +130,7 @@ let countWeaponPrice = (data, price, weapon) => {
         { name: 'Mithril Ore', count: 400 * ofh.m, price: 400 * ofh.m * orePrice, unit: 'g', img: oreImg },
         { name: 'Elder Wood Log', count: 400 * ofh.w, price: 400 * ofh.w * woodPrice, unit: 'g', img: woodImg },
         { name: cheapestTrophy.name, count: 400 * 35, price: 400 * 35 * trophyPrice, unit: 'g', img: trophyImg },
-        { name: 'Map Token', count: 400, price: 400 * 10, unit: 'token', img: token },
+        { name: 'OffHand Weapon Tribute', count: 400, price: 400 * 10, unit: 'token', img: imgOHTribute },
         { name: 'Glob of Ectoplasm', count: 20, price: 20 * ectoPrice, unit: 'g', img: ectoImg },
         { name: 'Philosopher\'s Stone', count: 20, price: 2, unit: 'ss', img: stone },
         { name: 'Thermocatalytic Reagent', count: 20, price: 2992, unit: 'g', img: thermo },
@@ -147,7 +163,8 @@ let showResult = (result) => {
     $detailView.empty();
 
     result.forEach((data, i) => {
-        let sum = 0;
+        let sumGold = 0;
+        let sumToken = 0;
         let totalMat = [];
         let matList = [];
 
@@ -160,11 +177,10 @@ let showResult = (result) => {
                 let g = price > 10000 ? Math.floor(price / 10000) : 0;
                 let s = price > 100 ? Math.floor((price % 10000) / 100) : 0;
                 let c = price % 100;
-                sum += price;
+                sumGold += price;
                 p = g ? `${g}<img src='${gold}'>${s}<img src='${silver}'>${c}<img src='${copper}'>` : s ? `${s}<img src='${silver}'>${c}<img src='${copper}'>` : `${c}<img src='${copper}'>`;
             } else if (unit === 'token') {
-                p = `${price}<img src='${token}'>`;
-                totalMat.push(p);
+                sumToken += price;
             } else if (unit === 'ss') {
                 p = `${price}<img src='${ss}'>`;
                 totalMat.push(p);
@@ -172,7 +188,8 @@ let showResult = (result) => {
 
             matList.push(`<li>${x.count} <img src='${x.img}'>${x.name} - ${p}</li>`);
         });
-        totalMat.push(`${Math.floor(sum / 10000)}<img src='${gold}'>${Math.floor((sum % 10000) / 100)}<img src='${silver}'>${sum % 100}<img src='${copper}'>`); // calculate money
+        totalMat.push(`${sumToken}<img src='${imgToken}'>`);
+        totalMat.push(`${Math.floor(sumGold / 10000)}<img src='${gold}'>${Math.floor((sumGold % 10000) / 100)}<img src='${silver}'>${sumGold % 100}<img src='${copper}'>`); // calculate money
 
         $detailView.append(`<div><h3>${data.title}</h3><p>${data.discription}</p><div class="mainHand"><ul>${matList.join('')}</ul></div><p class='total'>Total: ${totalMat.join(',')}</p></div><br>`)
     });
@@ -210,11 +227,19 @@ let tp = [
     { group: 'convert', name: 'Glob of Ectoplasm', id: 19721, img: 'https://wiki.guildwars2.com/images/thumb/9/9b/Glob_of_Ectoplasm.png/20px-Glob_of_Ectoplasm.png' }
 ]
 
-let postURl = 'https://api.guildwars2.com/v2/commerce/prices?ids=24282,24299,24341,24350,24356,24288,24294,19722,19700,19721';
+let mapCurrency = [
+    { name: 'Lump of Aurillium', img: 'https://wiki.guildwars2.com/images/thumb/1/14/Lump_of_Aurillium.png/20px-Lump_of_Aurillium.png' },
+    { name: 'Airship Part', img: 'https://wiki.guildwars2.com/images/thumb/1/14/Airship_Part.png/20px-Airship_Part.png' },
+    { name: 'Ley Line Crystal', img: 'https://wiki.guildwars2.com/images/thumb/b/b4/Ley_Line_Crystal.png/20px-Ley_Line_Crystal.png' },
+    { name: 'Trade Contract', img: 'https://wiki.guildwars2.com/images/thumb/f/f4/Trade_Contract.png/20px-Trade_Contract.png' },
+    { name: 'Unbound Magic', img: 'https://wiki.guildwars2.com/images/thumb/f/f5/Unbound_Magic.png/20px-Unbound_Magic.png' },
+    { name: 'Volatile Magic', img: 'https://wiki.guildwars2.com/images/thumb/5/54/Volatile_Magic.png/20px-Volatile_Magic.png' }
+];
+
+let apiURL = 'https://api.guildwars2.com/v2/commerce/prices?ids=24282,24299,24341,24350,24356,24288,24294,19722,19700,19721';
 let copper = 'https://wiki.guildwars2.com/images/e/eb/Copper_coin.png';
 let silver = 'https://wiki.guildwars2.com/images/3/3c/Silver_coin.png';
 let gold = 'https://wiki.guildwars2.com/images/d/d1/Gold_coin.png';
-let token = 'https://wiki.guildwars2.com/images/thumb/5/54/Volatile_Magic.png/20px-Volatile_Magic.png';
 let ss = 'https://wiki.guildwars2.com/images/thumb/6/63/Spirit_Shard.png/20px-Spirit_Shard.png';
 let thermo = 'https://wiki.guildwars2.com/images/thumb/5/53/Thermocatalytic_Reagent.png/20px-Thermocatalytic_Reagent.png';
 let stone = 'https://wiki.guildwars2.com/images/thumb/b/b9/Philosopher%27s_Stone.png/20px-Philosopher%27s_Stone.png';
